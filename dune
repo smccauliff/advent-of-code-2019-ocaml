@@ -1,3 +1,5 @@
-(executable
-  (name      decone)
-  (libraries base stdio))
+ (executables
+   (names decone dec2)
+   (libraries base stdio)
+   (modes (byte exe) (native shared_object)))
+ 
