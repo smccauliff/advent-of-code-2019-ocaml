@@ -2,4 +2,5 @@ _opam/
 *.iml
 _build
 .idea
+.merlin
 

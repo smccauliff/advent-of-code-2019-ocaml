@@ -62,9 +62,47 @@ let stdin_to_program () =
         | None -> raise (Invalid_argument "No line to read from stdin.")
         | Some(line) -> Array.map (Array.of_list (String.split_on_chars line ~on:[','])) ~f:Int.of_string;;
 
+
+let part_2_solution = 19690720;;
+
+let solution_max = 100;;
+
+let run_program_in_copy prog val1 val2 =
+    let prog_cpy = Array.copy prog in
+        prog_cpy.(1) <- val1;
+        prog_cpy.(2) <- val2;
+        run_program prog_cpy 0;
+        prog_cpy.(0);;
+
+let rec find_solution_val2 prog val1 val2 =
+    (* printf "looking %d %d\n%!" val1 val2; *)
+    if val2 = solution_max then
+        (solution_max, solution_max)
+    else
+        let output = run_program_in_copy prog val1 val2 in
+            if output = part_2_solution then
+                (val1, val2)
+            else
+                find_solution_val2 prog val1 (val2 + 1);;
+
+(* There's a fancier way to do this. *)
+(* Find part_2_solution given some value and position *)
+let rec find_solution_val1 prog val1 = 
+    if val1 = solution_max then
+        (solution_max, solution_max)
+    else 
+        let (solution_val2_1, solution_val2_2) = find_solution_val2 prog val1 0 in
+            if not (solution_val2_1 = solution_max) then
+                (solution_val2_1, solution_val2_2)
+            else 
+                find_solution_val1 prog (val1 + 1);;
+         
 let () =
     test_me;
     let prog = stdin_to_program () in
-        restore_working_state prog;
-        run_program prog 0;
-        print_program prog;;
+        let copy_prog = Array.copy prog in
+            restore_working_state copy_prog;
+            run_program copy_prog 0;
+            print_program copy_prog;
+            let (solution_1, solution_2) = find_solution_val1 prog 0 in 
+                printf "%d %d\n" solution_1 solution_2;;
