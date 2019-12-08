@@ -1,5 +1,5 @@
  (executables
-   (names decone dec2 dec5)
+   (names decone dec2 dec3 dec5)
    (libraries base stdio)
  )
  
